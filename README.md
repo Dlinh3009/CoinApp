@@ -6,4 +6,6 @@
   - Hiển thị biểu đồ biến động giá của coin.
   - Cài đặt: Chế độ tối, đơn vị tiền tệ.
 
-Cre: Nguyễn Duy Linh
+Nguồn API: https://docs.coingecko.com/reference/introduction
+Thư viện cài đặt thêm: Charts, SDWebImage, Alamofire.
+Cre: Nguyễn Duy Linh.
