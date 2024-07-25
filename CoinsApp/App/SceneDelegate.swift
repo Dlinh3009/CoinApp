@@ -22,22 +22,24 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.makeKeyAndVisible()
         window?.backgroundColor = .systemBackground
         
-        let homeVC = HomeViewController()
-        let settingsVC = SettingViewController()
-        
-        homeVC.tabBarItem = UITabBarItem(title: "Home", image: UIImage(systemName: "house"), tag: 0)
-        settingsVC.tabBarItem = UITabBarItem(title: "Settings", image: UIImage(systemName: "gear"), tag: 1)
-        
-        let homeNav = UINavigationController(rootViewController: homeVC)
-        let settingsNav = UINavigationController(rootViewController: settingsVC)
-        
-        let tabBarController = UITabBarController()
-        tabBarController.viewControllers = [homeNav, settingsNav]
-        
-        tabBarController.tabBar.backgroundColor = .lightGray
-        tabBarController.tabBar.tintColor = .customGreen
-        
-        window?.rootViewController = tabBarController
+//        let homeVC = HomeViewController()
+//        let settingsVC = SettingViewController()
+//        
+//        homeVC.tabBarItem = UITabBarItem(title: "Home", image: UIImage(systemName: "house"), tag: 0)
+//        settingsVC.tabBarItem = UITabBarItem(title: "Settings", image: UIImage(systemName: "gear"), tag: 1)
+//        
+//        let homeNav = UINavigationController(rootViewController: homeVC)
+//        let settingsNav = UINavigationController(rootViewController: settingsVC)
+//        
+//        let tabBarController = UITabBarController()
+//        tabBarController.viewControllers = [homeNav, settingsNav]
+//        
+//        tabBarController.tabBar.backgroundColor = .lightGray
+//        tabBarController.tabBar.tintColor = .customGreen
+//        
+//        window?.rootViewController = tabBarController
+        let splashScreenVC = SplashScreenViewController()
+                window?.rootViewController = splashScreenVC
     }
     
     func sceneDidDisconnect(_ scene: UIScene) {

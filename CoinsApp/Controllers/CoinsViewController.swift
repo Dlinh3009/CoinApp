@@ -34,8 +34,17 @@ class CoinsViewController: UIViewController {
         setUpFilterStackView()
         setupCategoryCollectionView()
         setupTableView()
+        NotificationCenter.default.addObserver(self, selector: #selector(currencyDidChange), name: .currencyDidChange, object: nil)
         fetchData()
     }
+    
+    @objc func currencyDidChange() {
+        fetchData()
+    }
+    
+    deinit {
+            NotificationCenter.default.removeObserver(self, name: .currencyDidChange, object: nil)
+        }
     
     // 2 nút để toggle ra filter
     func setUpFilterStackView() {
@@ -172,7 +181,6 @@ class CoinsViewController: UIViewController {
         }
     }
     
-    // Completion handler
     func fetchData() {
         APIService.shared.fetchCoins { [weak self] coins in
             guard let self = self, let coins = coins else { return }

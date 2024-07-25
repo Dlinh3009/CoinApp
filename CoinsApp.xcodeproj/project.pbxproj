@@ -19,6 +19,8 @@
 		042567922C4A43580089706E /* ChartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 042567912C4A43580089706E /* ChartViewController.swift */; };
 		042567942C4A43640089706E /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 042567932C4A43640089706E /* APIService.swift */; };
 		042567962C4A4E300089706E /* CoinDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 042567952C4A4E300089706E /* CoinDetailViewController.swift */; };
+		0432C0F12C5243AA00FB67B6 /* CurrencyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0432C0F02C5243AA00FB67B6 /* CurrencyManager.swift */; };
+		0432C0F32C52AFAC00FB67B6 /* SplashScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0432C0F22C52AFAC00FB67B6 /* SplashScreenViewController.swift */; };
 		04EA08792C4E37AF00037E28 /* DateValueFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EA08782C4E37AF00037E28 /* DateValueFormatter.swift */; };
 		04F5DB432C4DFC4100CCB2C2 /* CoinTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04F5DB422C4DFC4100CCB2C2 /* CoinTableViewCell.xib */; };
 		04F5DB442C4DFC4100CCB2C2 /* CoinTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F5DB412C4DFC4100CCB2C2 /* CoinTableViewCell.swift */; };
@@ -40,6 +42,8 @@
 		042567912C4A43580089706E /* ChartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartViewController.swift; sourceTree = "<group>"; };
 		042567932C4A43640089706E /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
 		042567952C4A4E300089706E /* CoinDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinDetailViewController.swift; sourceTree = "<group>"; };
+		0432C0F02C5243AA00FB67B6 /* CurrencyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyManager.swift; sourceTree = "<group>"; };
+		0432C0F22C52AFAC00FB67B6 /* SplashScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenViewController.swift; sourceTree = "<group>"; };
 		04DBC0D62C4A5EEE0096BBAE /* SDWebImage.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SDWebImage.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		04EA08782C4E37AF00037E28 /* DateValueFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateValueFormatter.swift; sourceTree = "<group>"; };
 		04F5DB412C4DFC4100CCB2C2 /* CoinTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinTableViewCell.swift; sourceTree = "<group>"; };
@@ -97,8 +101,10 @@
 		042567762C4A41850089706E /* App */ = {
 			isa = PBXGroup;
 			children = (
+				04EA08782C4E37AF00037E28 /* DateValueFormatter.swift */,
 				042567622C4A41480089706E /* AppDelegate.swift */,
 				042567642C4A41480089706E /* SceneDelegate.swift */,
+				0432C0F02C5243AA00FB67B6 /* CurrencyManager.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -117,7 +123,6 @@
 				042567682C4A41480089706E /* Main.storyboard */,
 				04F5DB412C4DFC4100CCB2C2 /* CoinTableViewCell.swift */,
 				04F5DB422C4DFC4100CCB2C2 /* CoinTableViewCell.xib */,
-				04EA08782C4E37AF00037E28 /* DateValueFormatter.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -130,6 +135,7 @@
 				0425678F2C4A434A0089706E /* CoinsViewController.swift */,
 				042567912C4A43580089706E /* ChartViewController.swift */,
 				042567952C4A4E300089706E /* CoinDetailViewController.swift */,
+				0432C0F22C52AFAC00FB67B6 /* SplashScreenViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -279,6 +285,7 @@
 				04F5DB442C4DFC4100CCB2C2 /* CoinTableViewCell.swift in Sources */,
 				042567672C4A41480089706E /* HomeViewController.swift in Sources */,
 				0425678E2C4A432B0089706E /* SettingViewController.swift in Sources */,
+				0432C0F32C52AFAC00FB67B6 /* SplashScreenViewController.swift in Sources */,
 				04EA08792C4E37AF00037E28 /* DateValueFormatter.swift in Sources */,
 				042567962C4A4E300089706E /* CoinDetailViewController.swift in Sources */,
 				042567942C4A43640089706E /* APIService.swift in Sources */,
@@ -286,6 +293,7 @@
 				042567922C4A43580089706E /* ChartViewController.swift in Sources */,
 				042567632C4A41480089706E /* AppDelegate.swift in Sources */,
 				042567842C4A425A0089706E /* Coin.swift in Sources */,
+				0432C0F12C5243AA00FB67B6 /* CurrencyManager.swift in Sources */,
 				042567652C4A41480089706E /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

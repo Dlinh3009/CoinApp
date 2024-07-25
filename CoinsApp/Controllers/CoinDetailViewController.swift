@@ -34,6 +34,7 @@ class CoinDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        NotificationCenter.default.addObserver(self, selector: #selector(currencyDidChange), name: .currencyDidChange, object: nil)
         displayCoinDetails()
     }
     
@@ -42,6 +43,11 @@ class CoinDetailViewController: UIViewController {
         self.navigationController?.setNavigationBarHidden(false, animated: animated)
         self.navigationController?.navigationBar.tintColor = .customGreen
     }
+    
+    @objc func currencyDidChange() {
+        displayCoinDetails()
+    }
+
     
     func setupUI() {
         nameLabel.font = UIFont.boldSystemFont(ofSize: 24)
@@ -93,20 +99,23 @@ class CoinDetailViewController: UIViewController {
         symbolTitleLabel.text = "Viết tắt:"
         symbolValueLabel.text = coin.symbol
         priceTitleLabel.text = "Giá hiện tại:"
-        priceValueLabel.text = "$\(coin.current_price)"
+        priceValueLabel.text = "\(CurrencyManager.shared.currency)\(coin.formatNumber(coin.current_price))"
         highTitleLabel.text = "Giá cao nhất trong 24h:"
-        highValueLabel.text = "$\(coin.high_24h)"
+        highValueLabel.text = "\(CurrencyManager.shared.currency)\(coin.formatNumber(coin.high_24h))"
         lowTitleLabel.text = "Giá thấp nhất trong 24h:"
-        lowValueLabel.text = "$\(coin.low_24h)"
+        lowValueLabel.text = "\(CurrencyManager.shared.currency)\(coin.formatNumber(coin.low_24h))"
         priceChangeTitleLabel.text = "Giá biến động 24h:"
-        priceChangeValueLabel.text = "$\(coin.price_change_24h)"
+        priceChangeValueLabel.text = "\(CurrencyManager.shared.currency)\(coin.formatNumber(coin.price_change_24h))"
         marketCapTitleLabel.text = "Tổng vốn hóa thị trường:"
-        marketCapValueLabel.text = "$\(coin.market_cap)"
+        marketCapValueLabel.text = "\(CurrencyManager.shared.currency)\(coin.formatNumber(coin.market_cap))"
         marketCapRankTitleLabel.text = "Thứ hạng theo vốn hóa:"
-        marketCapRankValueLabel.text = "\(coin.market_cap_rank)"
+        marketCapRankValueLabel.text = "\(coin.formatNumber(coin.market_cap_rank))"
         totalSupplyTitleLabel.text = "Số lượng đang lưu hành:"
-        totalSupplyValueLabel.text = "\(coin.total_supply)"
+        totalSupplyValueLabel.text = "\(coin.formatNumber(coin.total_supply ?? 0))"
         totalVolumeTitleLabel.text = "Khối lượng giao dịch:"
-        totalVolumeValueLabel.text = "\(coin.total_volume)"
+        totalVolumeValueLabel.text = "\(coin.formatNumber(coin.total_volume))"
+    }
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: .currencyDidChange, object: nil)
     }
 }

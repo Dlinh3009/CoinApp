@@ -56,10 +56,11 @@ class CoinTableViewCell: UITableViewCell {
     func configure(data coin: Coin) {
         nameLabel.text = coin.name
         symbolLabel.text = coin.symbol
-        currentLabel.text = "Giá hiện tại: $\(coin.current_price)"
-        highestLabel.text = "Giá cao nhất (24h): $\(coin.high_24h)"
-        lowestLabel.text = "Giá thấp nhất (24h): $\(coin.low_24h)"
-        changeLabel.text = "Biến động (24h): $\(coin.market_cap_rank)"
+        currentLabel.text = "Giá hiện tại: \(CurrencyManager.shared.currency)\(coin.formatNumber(coin.current_price))"
+        highestLabel.text = "Giá cao nhất (24h): \(CurrencyManager.shared.currency)\(coin.formatNumber(coin.high_24h))"
+        lowestLabel.text = "Giá thấp nhất (24h): \(CurrencyManager.shared.currency)\(coin.formatNumber(coin.low_24h))"
+        changeLabel.text = "Biến động (24h): \(CurrencyManager.shared.currency)\(coin.formatNumber(coin.price_change_24h))"
+        
         if let avatarUrl = URL(string: coin.image) {
             avatar.sd_setImage(with: avatarUrl, placeholderImage: UIImage(systemName: "person.circle"))
         }
