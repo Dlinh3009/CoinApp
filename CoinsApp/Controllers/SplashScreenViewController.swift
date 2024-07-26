@@ -14,7 +14,7 @@ class SplashScreenViewController: UIViewController {
         
         view.backgroundColor = .systemBackground
         
-        let logoImageView = UIImageView(image: UIImage(named: "splash2"))
+        let logoImageView = UIImageView(image: UIImage(named: "splash3"))
         logoImageView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(logoImageView)
         

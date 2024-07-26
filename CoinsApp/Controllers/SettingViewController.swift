@@ -24,13 +24,13 @@ class SettingViewController: UIViewController {
         super.viewWillAppear(animated)
         let isDarkMode = UserDefaults.standard.bool(forKey: "isDarkMode")
         overrideUserInterfaceStyle = isDarkMode ? .dark : .light
+        darkModeSwitch.isOn = isDarkMode
         
         let currentIndex = UserDefaults.standard.integer(forKey: "currencyIndex")
         currencySegmentedControl.selectedSegmentIndex = currentIndex
     }
     
     func setupUI() {
-        
         darkModeSwitch.translatesAutoresizingMaskIntoConstraints = false
         darkModeSwitch.addTarget(self, action: #selector(darkModeSwitchChanged), for: .valueChanged)
         
