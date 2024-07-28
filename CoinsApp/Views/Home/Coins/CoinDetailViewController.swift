@@ -10,7 +10,7 @@ import UIKit
 class CoinDetailViewController: UIViewController {
     
     var coin: Coin?
-
+    
     let nameLabel = UILabel()
     let symbolTitleLabel = UILabel()
     let symbolValueLabel = UILabel()
@@ -47,7 +47,7 @@ class CoinDetailViewController: UIViewController {
     @objc func currencyDidChange() {
         displayCoinDetails()
     }
-
+    
     
     func setupUI() {
         nameLabel.font = UIFont.boldSystemFont(ofSize: 24)

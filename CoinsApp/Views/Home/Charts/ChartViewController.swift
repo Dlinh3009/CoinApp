@@ -8,25 +8,38 @@
 import UIKit
 import Charts
 
-class ChartViewController: UIViewController{
+class ChartViewController: UIViewController {
     let textField = UITextField()
     let fetchButton = UIButton(type: .system)
     let lineChartView = LineChartView()
     let tableView = UITableView()
-    var filteredSuggestions = [String]()
-    var coins: [Coin] = []
-    var filteredCoins: [Coin] = []
-
+    var chartViewModel = ChartViewModel()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpTextField()
         setupFetchButton()
         setupLineChartView()
         setupTableView()
-        fetchSuggestion()
+        
+        chartViewModel.updateChart = { [weak self] prices, coinName in
+            self?.updateChart(with: prices, coinName: coinName)
+        }
+        
+        chartViewModel.updateTableView = { [weak self] isSearching in
+            self?.tableView.reloadData()
+            self?.tableView.isHidden = !isSearching || self?.chartViewModel.filteredCoins.isEmpty ?? true
+        }
+        
+        chartViewModel.showAlert = { [weak self] title, message in
+            self?.showAlert(title: title, message: message)
+        }
+        
+        chartViewModel.fetchSuggestion()
         NotificationCenter.default.addObserver(self, selector: #selector(currencyDidChange), name: .currencyDidChange, object: nil)
     }
     
+    // Text field để nhập từ khóa
     func setUpTextField() {
         textField.placeholder = "Tên coin (VD: bitcoin, wrapped-bitcoin)"
         textField.borderStyle = .roundedRect
@@ -41,6 +54,7 @@ class ChartViewController: UIViewController{
         ])
     }
     
+    // Nút hiển thị
     func setupFetchButton() {
         fetchButton.setTitle("Hiển thị biểu đồ", for: .normal)
         fetchButton.addTarget(self, action: #selector(showButtonTapped), for: .touchUpInside)
@@ -54,6 +68,7 @@ class ChartViewController: UIViewController{
         ])
     }
     
+    // Biểu đồ
     func setupLineChartView() {
         view.addSubview(lineChartView)
         lineChartView.translatesAutoresizingMaskIntoConstraints = false
@@ -68,6 +83,7 @@ class ChartViewController: UIViewController{
         lineChartView.doubleTapToZoomEnabled = false
     }
     
+    // TableView để gợi ý từ khóa
     func setupTableView() {
         tableView.delegate = self
         tableView.dataSource = self
@@ -88,42 +104,18 @@ class ChartViewController: UIViewController{
             return
         }
         
-        fetchMarketChart(for: coinName)
+        chartViewModel.fetchMarketChart(for: coinName)
     }
     
+    // Kiểm tra việc đổi tiền tệ
     @objc func currencyDidChange() {
         guard let coinName = textField.text?.lowercased(), !coinName.isEmpty else {
             return
         }
         
-        fetchMarketChart(for: coinName)
+        chartViewModel.fetchMarketChart(for: coinName)
     }
     
-    func fetchMarketChart(for coinName: String) {
-        APIService.shared.fetchMarketChart(for: coinName) { [weak self] marketChart, error in
-            guard let self = self else { return }
-            DispatchQueue.main.async {
-                if let marketChart = marketChart {
-                    self.updateChart(with: marketChart.prices, coinName: coinName)
-                } else {
-                    self.showAlert(title: "Lỗi", message: "Coin không tồn tại hoặc không có dữ liệu.")
-                }
-            }
-        }
-    }
-
-    
-    func fetchSuggestion() {
-        APIService.shared.fetchCoins { [weak self] coins in
-            guard let self = self, let coins = coins else { return }
-            self.coins = coins
-            self.filteredCoins = coins
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-            }
-        }
-    }
-
     func updateChart(with prices: [[Double]], coinName: String) {
         var entries = [ChartDataEntry]()
         for price in prices {
@@ -138,7 +130,7 @@ class ChartViewController: UIViewController{
         dataSet.circleColors = [NSUIColor.customGreen]
         dataSet.circleRadius = 4.0
         dataSet.lineWidth = 2.0
-    
+        
         let data = LineChartData(dataSet: dataSet)
         lineChartView.data = data
         
@@ -148,48 +140,44 @@ class ChartViewController: UIViewController{
         lineChartView.animate(xAxisDuration: 0, yAxisDuration: 0)
     }
     
+    // Cảnh báo khi nhập sai
     func showAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         present(alert, animated: true, completion: nil)
     }
+    
     deinit {
         NotificationCenter.default.removeObserver(self, name: .currencyDidChange, object: nil)
     }
-
 }
 
-extension ChartViewController: UITextFieldDelegate{
+extension ChartViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         if let text = textField.text as NSString? {
             let newText = text.replacingCharacters(in: range, with: string).lowercased()
-            filterCoins(searchString: newText)
+            chartViewModel.filterCoins(searchString: newText)
         }
         return true
     }
-        
-    func filterCoins(searchString: String) {
-        if !searchString.isEmpty {
-            filteredCoins = coins.filter { $0.name.localizedCaseInsensitiveContains(searchString) }
-        }
-        tableView.isHidden = filteredCoins.isEmpty
-        tableView.reloadData()
-    }
 }
 
-extension ChartViewController: UITableViewDelegate, UITableViewDataSource{
+extension ChartViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return filteredCoins.count
+        return chartViewModel.filteredCoins.count
     }
-
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
-        cell.textLabel?.text = filteredCoins[indexPath.row].name
+        cell.textLabel?.text = chartViewModel.filteredCoins[indexPath.row].name
         return cell
     }
-
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        textField.text = filteredCoins[indexPath.row].id
+        textField.text = chartViewModel.filteredCoins[indexPath.row].id
         tableView.isHidden = true
+    }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return textField.frame.height
     }
 }

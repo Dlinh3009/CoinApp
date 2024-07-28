@@ -21,6 +21,9 @@
 		042567962C4A4E300089706E /* CoinDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 042567952C4A4E300089706E /* CoinDetailViewController.swift */; };
 		0432C0F12C5243AA00FB67B6 /* CurrencyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0432C0F02C5243AA00FB67B6 /* CurrencyManager.swift */; };
 		0432C0F32C52AFAC00FB67B6 /* SplashScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0432C0F22C52AFAC00FB67B6 /* SplashScreenViewController.swift */; };
+		048F9F5F2C54DD6B002D90DF /* AppExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 048F9F5E2C54DD6B002D90DF /* AppExtensions.swift */; };
+		04D7CC672C53945100215F59 /* CoinsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D7CC662C53945100215F59 /* CoinsViewModel.swift */; };
+		04D7CC692C53946000215F59 /* ChartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D7CC682C53946000215F59 /* ChartViewModel.swift */; };
 		04EA08792C4E37AF00037E28 /* DateValueFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EA08782C4E37AF00037E28 /* DateValueFormatter.swift */; };
 		04F5DB432C4DFC4100CCB2C2 /* CoinTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04F5DB422C4DFC4100CCB2C2 /* CoinTableViewCell.xib */; };
 		04F5DB442C4DFC4100CCB2C2 /* CoinTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F5DB412C4DFC4100CCB2C2 /* CoinTableViewCell.swift */; };
@@ -44,6 +47,9 @@
 		042567952C4A4E300089706E /* CoinDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinDetailViewController.swift; sourceTree = "<group>"; };
 		0432C0F02C5243AA00FB67B6 /* CurrencyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyManager.swift; sourceTree = "<group>"; };
 		0432C0F22C52AFAC00FB67B6 /* SplashScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenViewController.swift; sourceTree = "<group>"; };
+		048F9F5E2C54DD6B002D90DF /* AppExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppExtensions.swift; sourceTree = "<group>"; };
+		04D7CC662C53945100215F59 /* CoinsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinsViewModel.swift; sourceTree = "<group>"; };
+		04D7CC682C53946000215F59 /* ChartViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartViewModel.swift; sourceTree = "<group>"; };
 		04DBC0D62C4A5EEE0096BBAE /* SDWebImage.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SDWebImage.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		04EA08782C4E37AF00037E28 /* DateValueFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateValueFormatter.swift; sourceTree = "<group>"; };
 		04F5DB412C4DFC4100CCB2C2 /* CoinTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinTableViewCell.swift; sourceTree = "<group>"; };
@@ -86,8 +92,9 @@
 		042567612C4A41480089706E /* CoinsApp */ = {
 			isa = PBXGroup;
 			children = (
+				048F9F5D2C54DD55002D90DF /* Extensions */,
+				04D7CC652C53943700215F59 /* ViewModels */,
 				0425677A2C4A41A10089706E /* Services */,
-				042567792C4A41990089706E /* Controllers */,
 				042567782C4A41930089706E /* Views */,
 				042567772C4A418C0089706E /* Models */,
 				042567762C4A41850089706E /* App */,
@@ -120,24 +127,12 @@
 		042567782C4A41930089706E /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				0432C0F22C52AFAC00FB67B6 /* SplashScreenViewController.swift */,
+				048F9F612C54DDDA002D90DF /* Setting */,
+				048F9F602C54DDCE002D90DF /* Home */,
 				042567682C4A41480089706E /* Main.storyboard */,
-				04F5DB412C4DFC4100CCB2C2 /* CoinTableViewCell.swift */,
-				04F5DB422C4DFC4100CCB2C2 /* CoinTableViewCell.xib */,
 			);
 			path = Views;
-			sourceTree = "<group>";
-		};
-		042567792C4A41990089706E /* Controllers */ = {
-			isa = PBXGroup;
-			children = (
-				042567662C4A41480089706E /* HomeViewController.swift */,
-				0425678D2C4A432B0089706E /* SettingViewController.swift */,
-				0425678F2C4A434A0089706E /* CoinsViewController.swift */,
-				042567912C4A43580089706E /* ChartViewController.swift */,
-				042567952C4A4E300089706E /* CoinDetailViewController.swift */,
-				0432C0F22C52AFAC00FB67B6 /* SplashScreenViewController.swift */,
-			);
-			path = Controllers;
 			sourceTree = "<group>";
 		};
 		0425677A2C4A41A10089706E /* Services */ = {
@@ -146,6 +141,60 @@
 				042567932C4A43640089706E /* APIService.swift */,
 			);
 			path = Services;
+			sourceTree = "<group>";
+		};
+		048F9F5D2C54DD55002D90DF /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				048F9F5E2C54DD6B002D90DF /* AppExtensions.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		048F9F602C54DDCE002D90DF /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				042567662C4A41480089706E /* HomeViewController.swift */,
+				048F9F632C54DDF5002D90DF /* Charts */,
+				048F9F622C54DDED002D90DF /* Coins */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		048F9F612C54DDDA002D90DF /* Setting */ = {
+			isa = PBXGroup;
+			children = (
+				0425678D2C4A432B0089706E /* SettingViewController.swift */,
+			);
+			path = Setting;
+			sourceTree = "<group>";
+		};
+		048F9F622C54DDED002D90DF /* Coins */ = {
+			isa = PBXGroup;
+			children = (
+				04F5DB412C4DFC4100CCB2C2 /* CoinTableViewCell.swift */,
+				04F5DB422C4DFC4100CCB2C2 /* CoinTableViewCell.xib */,
+				042567952C4A4E300089706E /* CoinDetailViewController.swift */,
+				0425678F2C4A434A0089706E /* CoinsViewController.swift */,
+			);
+			path = Coins;
+			sourceTree = "<group>";
+		};
+		048F9F632C54DDF5002D90DF /* Charts */ = {
+			isa = PBXGroup;
+			children = (
+				042567912C4A43580089706E /* ChartViewController.swift */,
+			);
+			path = Charts;
+			sourceTree = "<group>";
+		};
+		04D7CC652C53943700215F59 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				04D7CC662C53945100215F59 /* CoinsViewModel.swift */,
+				04D7CC682C53946000215F59 /* ChartViewModel.swift */,
+			);
+			path = ViewModels;
 			sourceTree = "<group>";
 		};
 		065B6D345D19C6C2683EF63F /* Pods */ = {
@@ -282,7 +331,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04D7CC692C53946000215F59 /* ChartViewModel.swift in Sources */,
 				04F5DB442C4DFC4100CCB2C2 /* CoinTableViewCell.swift in Sources */,
+				04D7CC672C53945100215F59 /* CoinsViewModel.swift in Sources */,
+				048F9F5F2C54DD6B002D90DF /* AppExtensions.swift in Sources */,
 				042567672C4A41480089706E /* HomeViewController.swift in Sources */,
 				0425678E2C4A432B0089706E /* SettingViewController.swift in Sources */,
 				0432C0F32C52AFAC00FB67B6 /* SplashScreenViewController.swift in Sources */,

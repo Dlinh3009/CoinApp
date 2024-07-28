@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  HomeViewController.swift
 //  CoinsApp
 //
 //  Created by Nguyễn Duy Linh on 19/7/24.
@@ -34,7 +34,6 @@ class HomeViewController: UIViewController {
         super.viewWillAppear(animated)
         self.navigationController?.setNavigationBarHidden(true, animated: animated)
     }
-    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.navigationController?.setNavigationBarHidden(false, animated: animated)
@@ -47,6 +46,7 @@ class HomeViewController: UIViewController {
         }
     }
     
+    // Label
     func setUpAppLabel() {
         appLabel.text = "Coins App"
         if let customFont = UIFont(name: "MarkerFelt-Thin", size: 30) {
@@ -65,6 +65,7 @@ class HomeViewController: UIViewController {
         ])
     }
     
+    // 2 ViewController con là Coin và Biểu đồ
     func setUpSubViewController() {
         chartViewController = ChartViewController()
         coinsViewController = CoinsViewController()
@@ -95,6 +96,7 @@ class HomeViewController: UIViewController {
         coinsViewController.view.isHidden = false
     }
     
+    // TabBar để di chuyển giữa Coins và Biểu đồ, kèm them nút tìm kiếm
     func setupCustomTabBar() {
         let coinsViewCOntroller = CoinsViewController()
         let coinsNavController = UINavigationController(rootViewController: coinsViewCOntroller)
@@ -139,6 +141,7 @@ class HomeViewController: UIViewController {
         tabBar.view.addSubview(underlineView!)
     }
     
+    // Thanh tìm kiếm
     func setUpSearchBar(){
         searchBar.isHidden = true
         searchBar.delegate = self
@@ -163,6 +166,7 @@ class HomeViewController: UIViewController {
         
     }
     
+    // Gạch dưới của 2 tab item
     func updateUnderlinePosition() {
         guard let underlineView = underlineView else { return }
         
@@ -183,6 +187,7 @@ class HomeViewController: UIViewController {
         return button
     }
     
+    // Các vạch seperator
     func addFirstSeparator() {
         let separator = UIView()
         separator.backgroundColor = .lightGray
@@ -236,66 +241,7 @@ extension HomeViewController: UITabBarControllerDelegate {
 
 extension HomeViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        coinsViewController.searchString = searchText
-        coinsViewController.filterCoins()
-    }
-}
-
-extension UIViewController {
-    func showToast(message: String, duration: Double = 2.0) {
-        let toastLabel = UILabel()
-        toastLabel.backgroundColor = UIColor.black.withAlphaComponent(0.6)
-        toastLabel.textColor = UIColor.white
-        toastLabel.textAlignment = .center
-        toastLabel.font = UIFont.systemFont(ofSize: 14)
-        toastLabel.text = message
-        toastLabel.alpha = 0.0
-        toastLabel.layer.cornerRadius = 10
-        toastLabel.clipsToBounds = true
-
-        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-              let window = windowScene.windows.first else { return }
-
-        window.addSubview(toastLabel)
-        toastLabel.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            toastLabel.centerXAnchor.constraint(equalTo: window.centerXAnchor),
-            toastLabel.centerYAnchor.constraint(equalTo: window.centerYAnchor),
-            toastLabel.widthAnchor.constraint(equalToConstant: 250),
-            toastLabel.heightAnchor.constraint(equalToConstant: 50)
-        ])
-
-        UIView.animate(withDuration: 0.5, animations: {
-            toastLabel.alpha = 1.0
-        }) { _ in
-            UIView.animate(withDuration: 0.5, delay: duration, options: .curveEaseOut, animations: {
-                toastLabel.alpha = 0.0
-            }) { _ in
-                toastLabel.removeFromSuperview()
-            }
-        }
-    }
-}
-
-
-extension UIColor {
-    static let customGreen = UIColor(hex: "#047528")
-    
-    convenience init(hex: String) {
-        let hexString = hex.trimmingCharacters(in: .whitespacesAndNewlines)
-        let scanner = Scanner(string: hexString)
-        
-        if hexString.hasPrefix("#") {
-            scanner.currentIndex = hexString.index(after: hexString.startIndex)
-        }
-        
-        var rgbValue: UInt64 = 0
-        scanner.scanHexInt64(&rgbValue)
-        
-        let red = CGFloat((rgbValue & 0xff0000) >> 16) / 255.0
-        let green = CGFloat((rgbValue & 0x00ff00) >> 8) / 255.0
-        let blue = CGFloat(rgbValue & 0x0000ff) / 255.0
-        
-        self.init(red: red, green: green, blue: blue, alpha: 1.0)
+        coinsViewController.coinsViewModel.searchString = searchText
+        coinsViewController.coinsViewModel.filterCoins()
     }
 }

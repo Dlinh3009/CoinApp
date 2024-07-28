@@ -8,15 +8,16 @@
 import Foundation
 import Charts
 
+// Format thời gian hiển thị trên biểu đồ
 class DateValueFormatter: IndexAxisValueFormatter {
     private let dateFormatter: DateFormatter
-
+    
     override init() {
         dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MMM dd"
         super.init()
     }
-
+    
     override func stringForValue(_ value: Double, axis: AxisBase?) -> String {
         let date = Date(timeIntervalSince1970: value)
         return dateFormatter.string(from: date)

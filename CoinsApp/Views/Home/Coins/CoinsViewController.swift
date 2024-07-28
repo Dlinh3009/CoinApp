@@ -10,48 +10,45 @@ import UIKit
 class CoinsViewController: UIViewController {
     
     let filterStackView = UIStackView()
-
     let priceFilterButton = UIButton()
     let rankFilterButton = UIButton()
-    
     var categoryCollectionView: UICollectionView!
     var categoryCollectionViewHeightConstraint: NSLayoutConstraint!
-    var isPriceFilterOpen = false
-    var isRankFilterOpen = false
-
+    var selectedFilterButton: UIButton?
+    
+    
+    var coinsViewModel = CoinsViewModel()
     
     var tableView: UITableView!
-    var coins: [Coin] = []
-    var filteredCoins: [Coin] = []
-    var searchString: String = "" {
-        didSet {
-            filterCoins()
-        }
-    }
-        
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpFilterStackView()
         setupCategoryCollectionView()
         setupTableView()
         NotificationCenter.default.addObserver(self, selector: #selector(currencyDidChange), name: .currencyDidChange, object: nil)
-        fetchData()
+        coinsViewModel.fetchData()
+        coinsViewModel.updateTableView = { [weak self] in
+            self?.tableView.reloadData()
+        }
+        
     }
     
+    // Kiểm tra việc thay đổi tiền tệ
     @objc func currencyDidChange() {
-        fetchData()
+        coinsViewModel.fetchData()
     }
     
     deinit {
-            NotificationCenter.default.removeObserver(self, name: .currencyDidChange, object: nil)
-        }
+        NotificationCenter.default.removeObserver(self, name: .currencyDidChange, object: nil)
+    }
     
-    // 2 nút để toggle ra filter
+    // StackView chứa 2 nút để toggle ra các thể loại
     func setUpFilterStackView() {
         filterStackView.axis = .horizontal
         filterStackView.spacing = 5
         filterStackView.distribution = .fillProportionally
-
+        
         filterStackView.addArrangedSubview(priceFilterButton)
         filterStackView.addArrangedSubview(rankFilterButton)
         
@@ -69,7 +66,7 @@ class CoinsViewController: UIViewController {
         
         priceFilterButton.addTarget(self, action: #selector(handlePriceButtonTap(_:)), for: .touchUpInside)
         rankFilterButton.addTarget(self, action: #selector(handleRankButtonTap(_:)), for: .touchUpInside)
-
+        
     }
     
     func createButton(_ button: UIButton, title: String) {
@@ -88,43 +85,41 @@ class CoinsViewController: UIViewController {
     }
     
     @objc func handlePriceButtonTap(_ sender: UIButton) {
-        isPriceFilterOpen.toggle()
-        isRankFilterOpen = false
-        categoryCollectionView.isHidden = !isPriceFilterOpen
-        categoryCollectionViewHeightConstraint.constant = isPriceFilterOpen ? 30 : 0
+        coinsViewModel.isPriceFilterOpen.toggle()
+        coinsViewModel.isRankFilterOpen = false
+        categoryCollectionView.isHidden = !coinsViewModel.isPriceFilterOpen
+        categoryCollectionViewHeightConstraint.constant = coinsViewModel.isPriceFilterOpen ? 30 : 0
         
-        updateButtonTitleWithArrow(priceFilterButton, title: "Giá coin", isOpen: isPriceFilterOpen)
-        updateButtonTitleWithArrow(rankFilterButton, title: "Thứ hạng", isOpen: isRankFilterOpen)
+        updateButtonTitleWithArrow(priceFilterButton, title: "Giá coin", isOpen: coinsViewModel.isPriceFilterOpen)
+        updateButtonTitleWithArrow(rankFilterButton, title: "Thứ hạng", isOpen: coinsViewModel.isRankFilterOpen)
         
         categoryCollectionView.reloadData()
-        
         UIView.animate(withDuration: 0.1) {
             self.view.layoutIfNeeded()
         }
     }
     
     @objc func handleRankButtonTap(_ sender: UIButton) {
-        isRankFilterOpen.toggle()
-        isPriceFilterOpen = false
-        categoryCollectionView.isHidden = !isRankFilterOpen
-        categoryCollectionViewHeightConstraint.constant = isRankFilterOpen ? 30 : 0
+        coinsViewModel.isRankFilterOpen.toggle()
+        coinsViewModel.isPriceFilterOpen = false
+        categoryCollectionView.isHidden = !coinsViewModel.isRankFilterOpen
+        categoryCollectionViewHeightConstraint.constant = coinsViewModel.isRankFilterOpen ? 30 : 0
         
-        updateButtonTitleWithArrow(rankFilterButton, title: "Thứ hạng", isOpen: isRankFilterOpen)
-        updateButtonTitleWithArrow(priceFilterButton, title: "Giá coin", isOpen: isPriceFilterOpen)
-
+        updateButtonTitleWithArrow(rankFilterButton, title: "Thứ hạng", isOpen: coinsViewModel.isRankFilterOpen)
+        updateButtonTitleWithArrow(priceFilterButton, title: "Giá coin", isOpen: coinsViewModel.isPriceFilterOpen)
+        
         categoryCollectionView.reloadData()
-        
         UIView.animate(withDuration: 0.1) {
             self.view.layoutIfNeeded()
         }
     }
     
-    // Table view chứa các cell về coins
+    // TableView chứ các coin
     func setupTableView() {
         tableView = UITableView()
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.separatorColor = .clear 
+        tableView.separatorColor = .clear
         tableView.register(UINib(nibName: "CoinTableViewCell", bundle: nil), forCellReuseIdentifier: "CoinTableViewCell")
         view.addSubview(tableView)
         
@@ -137,6 +132,7 @@ class CoinsViewController: UIViewController {
         ])
     }
     
+    // Collection view chứa các thể loại được toggle ra
     func setupCategoryCollectionView() {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -163,6 +159,8 @@ class CoinsViewController: UIViewController {
             categoryCollectionViewHeightConstraint
         ])
     }
+    
+    // Separator
     func addSeparator() {
         let separator = UIView()
         separator.backgroundColor = .lightGray
@@ -181,53 +179,33 @@ class CoinsViewController: UIViewController {
         }
     }
     
-    func fetchData() {
-        APIService.shared.fetchCoins { [weak self] coins in
-            guard let self = self, let coins = coins else { return }
-            self.coins = coins
-            self.filteredCoins = coins
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-            }
-        }
-    }
-    
-    func filterCoins() {
-        if searchString.isEmpty {
-            filteredCoins = coins
-        } else {
-            filteredCoins = coins.filter { $0.name.localizedCaseInsensitiveContains(searchString) }
-        }
-        tableView.reloadData()
-    }
-    
 }
 
-// CollectionView chứa các thể loại toggle xuống
+// Hiển thị thể loại dựa theo Giá hoặc Thứ hạng
 extension CoinsViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if isPriceFilterOpen {
+        if coinsViewModel.isPriceFilterOpen {
             return 3
-        } else if isRankFilterOpen {
+        } else if coinsViewModel.isRankFilterOpen {
             return 2
         }
         return 0
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
-
+        
         cell.contentView.subviews.forEach { $0.removeFromSuperview() }
         
         var titles: [String] = []
-
+        
         let button = UIButton()
-        if isPriceFilterOpen {
+        if coinsViewModel.isPriceFilterOpen {
             titles = ["Giá cao nhất (10)", "Giá thấp nhất (10)", "Biến động nhiều nhất"]
-        } else if isRankFilterOpen {
+        } else if coinsViewModel.isRankFilterOpen {
             titles = ["Tăng dần", "Giảm dần"]
         }
-
+        
         button.setTitle(titles[indexPath.item], for: .normal)
         button.setTitleColor(.customGreen, for: .normal)
         button.layer.borderWidth = 1
@@ -236,8 +214,7 @@ extension CoinsViewController: UICollectionViewDataSource, UICollectionViewDeleg
         button.titleLabel?.font = UIFont.systemFont(ofSize: 10)
         button.tag = indexPath.item
         button.addTarget(self, action: #selector(filterButtonTapped(_:)), for: .touchUpInside)
-                
-
+        
         cell.contentView.addSubview(button)
         button.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -248,76 +225,56 @@ extension CoinsViewController: UICollectionViewDataSource, UICollectionViewDeleg
         ])
         return cell
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 130, height: 30)
     }
     
     @objc func filterButtonTapped(_ sender: UIButton) {
-        let index = sender.tag
-        if isPriceFilterOpen {
-            switch index {
-            case 0:
-                // Giá cao nhất (10)
-                filteredCoins = coins.sorted { (coin1: Coin, coin2: Coin) -> Bool in
-                    return coin1.current_price > coin2.current_price
-                }.prefix(10).map { $0 }
-            case 1:
-                // Giá thấp nhất (10)
-                filteredCoins = coins.sorted { (coin1: Coin, coin2: Coin) -> Bool in
-                    return coin1.current_price < coin2.current_price
-                }.prefix(10).map { $0 }
-            case 2:
-                // Biến động nhiều nhất
-                filteredCoins = coins.sorted { (coin1: Coin, coin2: Coin) -> Bool in
-                    return abs(coin1.price_change_24h) > abs(coin2.price_change_24h)
-                }
-            default:
-                break
+        if selectedFilterButton == sender { // Bấm lại để tắt lọc
+            sender.backgroundColor = .clear
+            sender.setTitleColor(.customGreen, for: .normal)
+            selectedFilterButton = nil
+            coinsViewModel.filterButtonTapped(index: sender.tag)
+        } else {
+            if let previouslySelectedButton = selectedFilterButton {
+                previouslySelectedButton.backgroundColor = .clear
+                previouslySelectedButton.setTitleColor(.customGreen, for: .normal)
             }
-        } else if isRankFilterOpen {
-            switch index {
-            case 0:
-                // Thứ hạng tăng dần theo vốn hóa
-                filteredCoins = coins.sorted { (coin1: Coin, coin2: Coin) -> Bool in
-                    return coin1.market_cap_rank > coin2.market_cap_rank
-                }
-            case 1:
-                // Thứ hạng giảm dần theo vốn hóa
-                filteredCoins = coins.sorted { (coin1: Coin, coin2: Coin) -> Bool in
-                    return coin1.market_cap_rank < coin2.market_cap_rank
-                }
-            default:
-                break
-            }
+            sender.backgroundColor = .customGreen
+            sender.setTitleColor(.white, for: .normal)
+            selectedFilterButton = sender
+            coinsViewModel.filterButtonTapped(index: sender.tag)
         }
-        tableView.reloadData()
     }
-
+    
+    
+    
 }
 
 extension CoinsViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return filteredCoins.count
+        return coinsViewModel.filteredCoins.count
     }
-
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CoinTableViewCell", for: indexPath) as! CoinTableViewCell
-        let coin = filteredCoins[indexPath.row]
+        let coin = coinsViewModel.filteredCoins[indexPath.row]
         cell.configure(data: coin)
         return cell
     }
-
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 190
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let selectedCoin = filteredCoins[indexPath.row]
+        let selectedCoin = coinsViewModel.filteredCoins[indexPath.row]
         let coinDetailVC = CoinDetailViewController()
         coinDetailVC.coin = selectedCoin
         navigationController?.pushViewController(coinDetailVC, animated: false)
     }
     
 }
+
 
 

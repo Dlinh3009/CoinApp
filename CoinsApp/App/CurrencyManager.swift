@@ -7,10 +7,7 @@
 
 import Foundation
 
-extension Notification.Name {
-    static let currencyDidChange = Notification.Name("currencyDidChange")
-}
-
+// Theo dõi và thay đổi đơn vị tiền tệ để update UI
 class CurrencyManager {
     static let shared = CurrencyManager()
     
@@ -30,5 +27,9 @@ class CurrencyManager {
     func updateCurrency() {
         NotificationCenter.default.post(name: .currencyDidChange, object: nil)
     }
+}
+
+extension Notification.Name {
+    static let currencyDidChange = Notification.Name("currencyDidChange")
 }
 

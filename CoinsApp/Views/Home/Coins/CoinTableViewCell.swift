@@ -51,7 +51,7 @@ class CoinTableViewCell: UITableViewCell {
             separator.heightAnchor.constraint(equalToConstant: 3)
         ])
     }
-
+    
     
     func configure(data coin: Coin) {
         nameLabel.text = coin.name

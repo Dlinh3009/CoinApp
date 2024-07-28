@@ -31,7 +31,7 @@ class APIService {
     
     @objc private func currencyDidChange() {
     }
-
+    
     func fetchCoins(completion: @escaping ([Coin]?) -> Void) {
         let url = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=\(currency)&precision=2&?x_cg_demo_api_key=CG-y24YYJjrBuaFegwPUzTiVb29"
         
@@ -54,10 +54,10 @@ class APIService {
             }
         }
     }
-
+    
     func fetchMarketChart(for coinName: String, completion: @escaping (PriceChart?, Error?) -> Void) {
         let url = "https://api.coingecko.com/api/v3/coins/\(coinName)/market_chart?vs_currency=\(currency)&days=7&interval=daily&precision=2&?x_cg_demo_api_key=CG-y24YYJjrBuaFegwPUzTiVb29"
-
+        
         AF.request(url).responseData { response in
             switch response.result {
             case .success(let data):
@@ -77,5 +77,5 @@ class APIService {
             }
         }
     }
-
+    
 }
